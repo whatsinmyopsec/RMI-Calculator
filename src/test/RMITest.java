@@ -40,7 +40,7 @@ class RMITest {
     @Test
     void divideTest() throws RemoteException {
         setUp();
-        assertEquals(-0.19944, rmi.divide(operand1, operand2));
+        assertEquals(-0.19945, rmi.divide(operand1, operand2));
     }
 
     @Test
