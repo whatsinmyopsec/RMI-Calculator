@@ -194,18 +194,23 @@ public class Client<panel> implements ActionListener {
                         double a = calc.operand1(input);
                         double b = calc.operand2(input);
                         char operator = calc.operator(input); //gets the operator of the equation.
-                        if (operator == '+') {
-                            resultsScreen.append(date + input + " = " + calc.add(a, b) + "\n");
-                        } else if (operator == '-') {
-                            resultsScreen.append(date + input + " = " + calc.subtract(a, b) + "\n");
-                        } else if (operator == '/') {
-                            if (b == 0) {
-                                resultsScreen.append("You shall not pass");
-                                screen.setText("Cannot divide by Zero!");
-                            }
-                            resultsScreen.append(date + input + " = " + calc.divide(a, b) + "\n");
-                        } else {
-                            resultsScreen.append(date + input + " = " + calc.multiply(a, b) + "\n");
+                        switch (operator) {
+                            case '+':
+                                resultsScreen.append(date + input + " = " + calc.add(a, b) + "\n");
+                                break;
+                            case '-':
+                                resultsScreen.append(date + input + " = " + calc.subtract(a, b) + "\n");
+                                break;
+                            case '/':
+                                if (b == 0) {
+                                    resultsScreen.append("You shall not pass");
+                                    screen.setText("Cannot divide by Zero!");
+                                }
+                                resultsScreen.append(date + input + " = " + calc.divide(a, b) + "\n");
+                                break;
+                            default:
+                                resultsScreen.append(date + input + " = " + calc.multiply(a, b) + "\n");
+                                break;
                         }
 
                         //reset the input screen to blank.
