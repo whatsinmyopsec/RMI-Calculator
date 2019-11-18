@@ -5,15 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.Naming;
 import java.util.Date;
-
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-
-import javafx.scene.text.Text;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 /**
  * Client class with calculator GUI.
@@ -23,115 +16,109 @@ import javafx.scene.text.Text;
  * @author Kevin Power - 20075681
  */
 
-public class Client implements ActionListener {
+public class Client<panel> implements ActionListener {
 
-    //Text fields
-    private JTextField screen; //for input
-    private JTextArea resultsScreen; //for results
 
-    private String input; //the input of the user
+    private JTextField screen;
+    private JTextArea resultsScreen;
+    private JPanel panel, panelmdas, panelextras;
+    private String input;
 
     public static void main(String[] args) {
-
-        new Client(); //creating a new instance of this class.
+        new Client();
     }
 
     Client() {
-        input = ""; //setting the input to nothing initially.
+        input = "";
 
-        //GUI
         JFrame calcFrame = new JFrame();
         calcFrame.setTitle("Calculator - Client");
         calcFrame.setSize(400, 500);
-        screen = new JTextField(13);
+
+        screen = new JTextField(26);
+        screen.setBorder(new EmptyBorder(10, 10, 10, 10));
         screen.setEditable(false);
         screen.setHorizontalAlignment(JTextField.RIGHT);
 
         resultsScreen = new JTextArea();
+        resultsScreen.setBorder(new EmptyBorder(10, 10, 10, 10));
         resultsScreen.setEditable(false);
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(4, 4, 7, 7));
+        // loves the panels
+        panel = new JPanel();
+        panel.setLayout(new GridLayout(3, 3, 6, 6));
+        panel.setBorder(new EmptyBorder(10, 0, 10, 6));
         panel.setBackground(new Color(199, 136, 78));
-        Font f=new Font("Helvetica",Font.BOLD,24);
-        panel.setFont(f);
-        //loop through 9 down to 0 and create buttons.
-        for (int i = 9; i >= 0; i--) {
-            String name = String.valueOf(i);
-            JButton numbers = new JButton(name);
-            numbers.setPreferredSize(new Dimension(50, 50));
-            numbers.setPreferredSize(new Dimension(50, 50));
-            numbers.setActionCommand(name);
-            numbers.addActionListener(this);
-            panel.add(numbers);
+
+        panelmdas = new JPanel();
+        panelmdas.setLayout(new GridLayout(4, 1, 6, 6));
+        panelmdas.setBorder(new EmptyBorder(10, 10, 10, 6));
+        panelmdas.setBackground(new Color(199, 136, 78));
+
+        panelextras = new JPanel();
+        panelextras.setLayout(new GridLayout(3, 1, 6, 6));
+        panelextras.setBorder(new EmptyBorder(10, 0, 10, 10));
+        panelextras.setBackground(new Color(199, 136, 78));
+
+        //buttons in calculator
+        String[] numbers = {"7", "8", "9", "4", "5", "6", "1", "2", "3"};
+        String[] mdas = {"*", "/", "-", "+"};
+        String[] extras = {"0", "="};
+
+
+        //adding buttons for buttons array
+        for (String i : numbers) {
+            JButton button = new JButton(i);
+            button.setPreferredSize(new Dimension(50, 50));
+            button.setActionCommand(i);
+            button.addActionListener(this);
+            panel.add(button);
         }
 
-        //plus operator button
-        JButton plus = new JButton("+");
-        plus.setActionCommand("plus");
-        plus.addActionListener(this);
-        panel.add(plus);
+        for (String i : mdas) {
+            JButton button = new JButton(i);
+            button.setPreferredSize(new Dimension(50, 50));
+            button.setPreferredSize(new Dimension(50, 50));
+            button.setActionCommand(i);
+            button.addActionListener(this);
+            panelmdas.add(button);
+        }
 
-        //minus operator button
-        JButton minus = new JButton("-");
-        minus.setActionCommand("minus");
-        minus.addActionListener(this);
-        panel.add(minus);
+        for (String i : extras) {
+            JButton btn = new JButton(i);
+            btn.setPreferredSize(new Dimension(50, 50));
+            btn.setPreferredSize(new Dimension(50, 50));
+            btn.setActionCommand(i);
+            btn.addActionListener(this);
+            panelextras.add(btn);
+        }
 
-        //divide operator button
-        JButton divide = new JButton("/");
-        divide.setActionCommand("divide");
-        divide.addActionListener(this);
-        panel.add(divide);
-
-        //multiply operator button
-        JButton multiply = new JButton("*");
-        multiply.setActionCommand("multiply");
-        multiply.addActionListener(this);
-        panel.add(multiply);
-
-        //decimal button
-        JButton dot = new JButton(".");
-        dot.setActionCommand("dot");
-        dot.addActionListener(this);
-        panel.add(dot);
-
-        //equals|submit button
-        JButton equals = new JButton("=");
-        equals.setActionCommand("equals");
-        equals.addActionListener(this);
-        panel.add(equals);
 
         //clear input
-        JButton clear = new JButton( "c");
+        JButton clear = new JButton("c");
         clear.addActionListener(new ActionListener() {
             @Override
-
-                public void actionPerformed(ActionEvent e) {
-                    String answer = screen.getText();
-                    answer = "";
-                    screen.setText(answer);
-                }
+            public void actionPerformed(ActionEvent e) {
+                String answer = screen.getText();
+                answer = "";
+                screen.setText(answer);
+            }
         });
-        panel.add(clear);
+        panelextras.add(clear);
 
         //add all to frame
-        calcFrame.add(screen, BorderLayout.NORTH);
-        calcFrame.add(resultsScreen, BorderLayout.CENTER);
-        calcFrame.add(panel, BorderLayout.SOUTH);
+        calcFrame.add(panelmdas, BorderLayout.WEST);
+        calcFrame.add(panel, BorderLayout.CENTER);
+        calcFrame.add(panelextras, BorderLayout.EAST);
+        calcFrame.add(screen, BorderLayout.PAGE_END);
+        calcFrame.add(resultsScreen, BorderLayout.PAGE_START);
         calcFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         calcFrame.setVisible(true);
-
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-
-        /*all the buttons in the frame -
-         * if clicked -> appends character to the last index of the string
-         * and displays on text field.
-         */
         switch (command) {
             case "0":
                 input += "0";
@@ -173,33 +160,29 @@ public class Client implements ActionListener {
                 input += "9";
                 screen.setText(input);
                 break;
-            case "plus":
+            case "+":
                 input += "+";
                 screen.setText(input);
                 break;
-            case "minus":
+            case "-":
                 input += "-";
                 screen.setText(input);
                 break;
-            case "divide":
+            case "/":
                 input += "/";
                 screen.setText(input);
                 break;
-            case "multiply":
+            case "*":
                 input += "*";
                 screen.setText(input);
                 break;
-            case "dot":
-                input += ".";
-                screen.setText(input);
-                break;
-            case "clear":
+            case "c":
                 input += "c";
                 screen.setText(input);
                 break;
 
             //when submitted
-            case "equals":
+            case "=":
                 try {
                     //creates gets the date and time when clicked.
                     String date = new Date() + ":  ";
@@ -216,14 +199,11 @@ public class Client implements ActionListener {
                         } else if (operator == '-') {
                             resultsScreen.append(date + input + " = " + calc.subtract(a, b) + "\n");
                         } else if (operator == '/') {
-                            if (b == 0){
-
+                            if (b == 0) {
                                 resultsScreen.append("You shall not pass");
                                 screen.setText("Cannot divide by Zero!");
                             }
                             resultsScreen.append(date + input + " = " + calc.divide(a, b) + "\n");
-
-
                         } else {
                             resultsScreen.append(date + input + " = " + calc.multiply(a, b) + "\n");
                         }
@@ -242,6 +222,4 @@ public class Client implements ActionListener {
                 break;
         }
     }
-
-
 }
