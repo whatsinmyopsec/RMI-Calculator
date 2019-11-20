@@ -8,32 +8,28 @@ import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
 public class Server {
-    public static void main(String[] args) {
+    private JTextArea screen = new JTextArea();
+        
+    /*public static void main(String[] args) {
+        new Server();
+    }*/
+
+    Server() {
 
         JFrame frame = new JFrame();
-        frame.setSize(300, 300);
         frame.setTitle("Server");
 
-        JTextArea screen = new JTextArea();
         screen.setEditable(false);
 
         frame.add(screen, BorderLayout.CENTER);
 
-
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(500, 300);
         frame.setVisible(true);
-
-
-        try {
-            //creates registry at port 1099.
-            Registry rmireg = LocateRegistry.createRegistry(1099);
-            rmireg.rebind("Calculator", new RMI()); //binds the name "Calculator" with the remote object - rebinds if one exist already.
-          //  System.out.println((String.valueOf(new Date()) + ": Server is Connected."));
-			screen.append(new Date() + ": Server is Connected.");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
     }
 
+
+    void handleAction(String s) {
+        screen.append(s + '\n');
+    }
 }

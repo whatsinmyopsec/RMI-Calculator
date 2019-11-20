@@ -1,6 +1,9 @@
 package code;
 
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.ServerNotActiveException;
 import java.rmi.server.UnicastRemoteObject;
 import java.text.DecimalFormat;
 import java.util.regex.Matcher;
@@ -14,8 +17,10 @@ import java.util.regex.Pattern;
 
 public class RMI extends UnicastRemoteObject implements Calculator {
 
+    static Server view = new Server();
     private DecimalFormat decimal; //to round the double
 
+    // private Server view = new Server();
     //Constructor
     public RMI() throws RemoteException {
         decimal = new DecimalFormat(".#####"); //round to 4 decimal points.
@@ -23,24 +28,32 @@ public class RMI extends UnicastRemoteObject implements Calculator {
 
     @Override
     public double add(double a, double b) throws RemoteException {
+        handleClientConnectionDetails();
+        view.handleAction("Add Method Called : " + a + " + " + b + "\nData Passed Back to Client : " + (a + b));
         return Double.parseDouble(decimal.format(a + b));
     }
 
     @Override
     public double subtract(double a, double b) throws RemoteException {
+        handleClientConnectionDetails();
+        view.handleAction("Subtract Method Called : " + a + " - " + b + "\nData Passed Back to Client : " + (a - b));
         return Double.parseDouble(decimal.format(a - b));
     }
 
     @Override
     public double multiply(double a, double b) throws RemoteException {
+        handleClientConnectionDetails();
+        view.handleAction("Multiply Method Called : " + a + " * " + b + "\nData Passed Back to Client : " + (a * b));
         return Double.parseDouble(decimal.format(a * b));
     }
 
     @Override
     public double divide(double a, double b) throws RemoteException {
-        if (a == 0 || b == 0){
+        if (b == 0) {
             return 0;
-        }
+        } else
+            handleClientConnectionDetails();
+        view.handleAction("Divide Method Called : " + a + " / " + b + "\nData Passed Back to Client : " + (a / b));
         return Double.parseDouble(decimal.format(a / b));
     }
 
@@ -77,6 +90,26 @@ public class RMI extends UnicastRemoteObject implements Calculator {
         String nums = input.replaceFirst("(?!^)[-+*/]", "/"); //replaces the operator into "/"
         //gets the first part of the string after the delimiter and converts to double
         return Double.parseDouble(nums.substring(nums.indexOf("/") + 1));
+    }
+
+    private void handleClientConnectionDetails() {
+        try {
+            view.handleAction("Client Connected at : " + getClientHost());
+        } catch (ServerNotActiveException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String... args) {
+        try {
+            RMI obj = new RMI();
+            Registry registry = LocateRegistry.createRegistry(1099);
+            registry.rebind("Calculator", obj);
+            view.handleAction("CalculatorServer bound in registry");
+        } catch (Exception e) {
+            System.out.println("CalculatorServer error : " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
 }

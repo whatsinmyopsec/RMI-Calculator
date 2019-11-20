@@ -16,7 +16,7 @@ import javax.swing.border.EmptyBorder;
  * @author Kevin Power - 20075681
  */
 
-public class Client<panel> implements ActionListener {
+public class Client implements ActionListener {
 
 
     private JTextField screen;
