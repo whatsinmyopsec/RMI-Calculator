@@ -17,10 +17,9 @@ import java.util.regex.Pattern;
 
 public class RMI extends UnicastRemoteObject implements Calculator {
 
-    static Server view = new Server();
+    private static Server view = new Server();
     private DecimalFormat decimal; //to round the double
 
-    // private Server view = new Server();
     //Constructor
     public RMI() throws RemoteException {
         decimal = new DecimalFormat(".#####"); //round to 4 decimal points.
@@ -29,21 +28,21 @@ public class RMI extends UnicastRemoteObject implements Calculator {
     @Override
     public double add(double a, double b) throws RemoteException {
         handleClientConnectionDetails();
-        view.handleAction("Add Method Called : " + a + " + " + b + "\nData Passed Back to Client : " + (a + b));
+        view.handleAction("Add Method Called : " + a + " ➕ " + b + "\nThe answer to this is : " + (a + b));
         return Double.parseDouble(decimal.format(a + b));
     }
 
     @Override
     public double subtract(double a, double b) throws RemoteException {
         handleClientConnectionDetails();
-        view.handleAction("Subtract Method Called : " + a + " - " + b + "\nData Passed Back to Client : " + (a - b));
+        view.handleAction("Subtract Method Called : " + a + " ➖ " + b + "\nThe answer to this is : " + (a - b));
         return Double.parseDouble(decimal.format(a - b));
     }
 
     @Override
     public double multiply(double a, double b) throws RemoteException {
         handleClientConnectionDetails();
-        view.handleAction("Multiply Method Called : " + a + " * " + b + "\nData Passed Back to Client : " + (a * b));
+        view.handleAction("Multiply Method Called : " + a + " ✖ " + b + "\nThe answer to this is : " + (a * b));
         return Double.parseDouble(decimal.format(a * b));
     }
 
@@ -53,20 +52,27 @@ public class RMI extends UnicastRemoteObject implements Calculator {
             return 0;
         } else
             handleClientConnectionDetails();
-        view.handleAction("Divide Method Called : " + a + " / " + b + "\nData Passed Back to Client : " + (a / b));
+        view.handleAction("Divide Method Called : " + a + " ➗ " + b + "\nThe answer to this is : " + (a / b));
         return Double.parseDouble(decimal.format(a / b));
     }
 
+    /**
+     * Checks if the string is valid
+     *
+     * @param input Equation
+     * @return
+     * @throws RemoteException
+     */
     @Override
     public boolean valid(String input) throws RemoteException {
 
-        return Pattern.matches("^[\\-+]?\\d{1,}(\\.\\d{1,})?[-+*/][\\-+]?\\d{1,}(\\.\\d{1,})?$", input);
+        return Pattern.matches("^[\\-+]?\\d{1,}(\\.\\d{1,})?[-+✖÷][\\-+]?\\d{1,}(\\.\\d{1,})?$", input);
     }
 
     @Override
     public char operator(String input) throws RemoteException {
         //this specifies the regular expression to use to find the match
-        Pattern operator = Pattern.compile("(?!^)[-+*/]"); //regular expression for finding the first operator that is not at the start of the string
+        Pattern operator = Pattern.compile("(?!^)[-+✖÷]"); //regular expression for finding the first operator that is not at the start of the string
         Matcher match = operator.matcher(input);
         if (match.find()) {
             return match.group(0).charAt(0); //return operator
@@ -77,19 +83,17 @@ public class RMI extends UnicastRemoteObject implements Calculator {
 
     @Override
     public double operand1(String input) throws RemoteException {
-        String nums = input.replaceFirst("(?!^)[-+*/]", "/"); //replaces the operator into "/"
-
+        String nums = input.replaceFirst("(?!^)[-+✖÷]", "÷"); //replaces the operator into "/"
         //gets the first part of the string before the delimiter and converts to double
-        return Double.parseDouble(nums.substring(0, nums.indexOf("/")));
+        return Double.parseDouble(nums.substring(0, nums.indexOf("÷")));
 
     }
 
     @Override
     public double operand2(String input) throws RemoteException {
-
-        String nums = input.replaceFirst("(?!^)[-+*/]", "/"); //replaces the operator into "/"
+        String nums = input.replaceFirst("(?!^)[-+✖÷]", "÷"); //replaces the operator into "/"
         //gets the first part of the string after the delimiter and converts to double
-        return Double.parseDouble(nums.substring(nums.indexOf("/") + 1));
+        return Double.parseDouble(nums.substring(nums.indexOf("÷") + 1));
     }
 
     private void handleClientConnectionDetails() {
@@ -99,6 +103,12 @@ public class RMI extends UnicastRemoteObject implements Calculator {
             e.printStackTrace();
         }
     }
+
+    /**
+     * hack to get this thing to work
+     *
+     * @param args
+     */
 
     public static void main(String... args) {
         try {
@@ -111,5 +121,4 @@ public class RMI extends UnicastRemoteObject implements Calculator {
             e.printStackTrace();
         }
     }
-
 }

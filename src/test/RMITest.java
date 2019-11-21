@@ -70,7 +70,7 @@ class RMITest {
         assertEquals('-', rmi.operator(test));
 
         String test2 = "-133.21/-123.32";
-        assertEquals('/', rmi.operator(test2));
+        assertEquals('÷', rmi.operator(test2));
 
     }
 

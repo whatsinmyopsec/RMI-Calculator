@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.Naming;
+import java.rmi.RemoteException;
 import java.util.Date;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -16,8 +17,7 @@ import javax.swing.border.EmptyBorder;
  * @author Kevin Power - 20075681
  */
 
-public class Client implements ActionListener {
-
+public class Client implements ActionListener, Calculator {
 
     private JTextField screen;
     private JTextArea resultsScreen;
@@ -62,7 +62,7 @@ public class Client implements ActionListener {
 
         //buttons in calculator
         String[] numbers = {"7", "8", "9", "4", "5", "6", "1", "2", "3"};
-        String[] mdas = {"*", "/", "-", "+"};
+        String[] mdas = {"✖", "÷", "-", "+"};
         String[] extras = {"0", "="};
 
 
@@ -168,12 +168,12 @@ public class Client implements ActionListener {
                 input += "-";
                 screen.setText(input);
                 break;
-            case "/":
-                input += "/";
+            case "÷":
+                input += "÷";
                 screen.setText(input);
                 break;
-            case "*":
-                input += "*";
+            case "✖":
+                input += "✖";
                 screen.setText(input);
                 break;
             case "c":
@@ -201,7 +201,7 @@ public class Client implements ActionListener {
                             case '-':
                                 resultsScreen.append(date + input + " = " + calc.subtract(a, b) + "\n");
                                 break;
-                            case '/':
+                            case '÷':
                                 if (b == 0) {
                                     resultsScreen.append("You shall not pass");
                                     screen.setText("Cannot divide by Zero!");
@@ -226,5 +226,45 @@ public class Client implements ActionListener {
                 }
                 break;
         }
+    }
+
+    @Override
+    public double add(double a, double b) throws RemoteException {
+        return 0;
+    }
+
+    @Override
+    public double subtract(double a, double b) throws RemoteException {
+        return 0;
+    }
+
+    @Override
+    public double multiply(double a, double b) throws RemoteException {
+        return 0;
+    }
+
+    @Override
+    public double divide(double a, double b) throws RemoteException {
+        return 0;
+    }
+
+    @Override
+    public boolean valid(String input) throws RemoteException {
+        return false;
+    }
+
+    @Override
+    public char operator(String input) throws RemoteException {
+        return 0;
+    }
+
+    @Override
+    public double operand1(String input) throws RemoteException {
+        return 0;
+    }
+
+    @Override
+    public double operand2(String input) throws RemoteException {
+        return 0;
     }
 }
