@@ -66,13 +66,13 @@ public class RMI extends UnicastRemoteObject implements Calculator {
     @Override
     public boolean valid(String input) throws RemoteException {
 
-        return Pattern.matches("^[\\-+]?\\d{1,}(\\.\\d{1,})?[-+✖÷][\\-+]?\\d{1,}(\\.\\d{1,})?$", input);
+        return Pattern.matches("^[\\-+]?\\d{1,}(\\.\\d{1,})?[➖➕✖➗][\\-+]?\\d{1,}(\\.\\d{1,})?$", input);
     }
 
     @Override
     public char operator(String input) throws RemoteException {
         //this specifies the regular expression to use to find the match
-        Pattern operator = Pattern.compile("(?!^)[-+✖÷]"); //regular expression for finding the first operator that is not at the start of the string
+        Pattern operator = Pattern.compile("(?!^)[➖➕✖➗]"); //regular expression for finding the first operator that is not at the start of the string
         Matcher match = operator.matcher(input);
         if (match.find()) {
             return match.group(0).charAt(0); //return operator
@@ -83,7 +83,7 @@ public class RMI extends UnicastRemoteObject implements Calculator {
 
     @Override
     public double operand1(String input) throws RemoteException {
-        String nums = input.replaceFirst("(?!^)[-+✖÷]", "÷"); //replaces the operator into "/"
+        String nums = input.replaceFirst("(?!^)[➖➕✖➗]", "÷"); //replaces the operator into "/"
         //gets the first part of the string before the delimiter and converts to double
         return Double.parseDouble(nums.substring(0, nums.indexOf("÷")));
 
@@ -91,9 +91,9 @@ public class RMI extends UnicastRemoteObject implements Calculator {
 
     @Override
     public double operand2(String input) throws RemoteException {
-        String nums = input.replaceFirst("(?!^)[-+✖÷]", "÷"); //replaces the operator into "/"
+        String nums = input.replaceFirst("(?!^)[➖➕✖➗]", "➗"); //replaces the operator into "/"
         //gets the first part of the string after the delimiter and converts to double
-        return Double.parseDouble(nums.substring(nums.indexOf("÷") + 1));
+        return Double.parseDouble(nums.substring(nums.indexOf("➗") + 1));
     }
 
     private void handleClientConnectionDetails() {

@@ -21,7 +21,7 @@ public class Client implements ActionListener, Calculator {
 
     private JTextField screen;
     private JTextArea resultsScreen;
-    private JPanel panel, panelmdas, panelextras;
+    private JPanel panel, panelmdas, panelextras, reusltpanel;
     private String input;
 
     public static void main(String[] args) {
@@ -34,35 +34,44 @@ public class Client implements ActionListener, Calculator {
         JFrame calcFrame = new JFrame();
         calcFrame.setTitle("Calculator - Client");
         calcFrame.setSize(400, 500);
+        calcFrame.setBackground(Color.decode("#3c3c3c"));
 
         screen = new JTextField(26);
         screen.setBorder(new EmptyBorder(10, 10, 10, 10));
         screen.setEditable(false);
+        screen.setBackground(Color.LIGHT_GRAY);
         screen.setHorizontalAlignment(JTextField.RIGHT);
 
+        reusltpanel = new JPanel();
+        reusltpanel.setBackground(Color.decode("#474747"));
+        reusltpanel.setBorder(new EmptyBorder(10,10,10,10));
+
         resultsScreen = new JTextArea();
-        resultsScreen.setBorder(new EmptyBorder(10, 10, 10, 10));
         resultsScreen.setEditable(false);
+        resultsScreen.setBackground(Color.decode("#d4ffa3"));
+        resultsScreen.setBorder(BorderFactory.createLineBorder(Color.black));
+        resultsScreen.setPreferredSize(new Dimension(360,35));
+        reusltpanel.add(resultsScreen);
 
         // loves the panels
         panel = new JPanel();
-        panel.setLayout(new GridLayout(3, 3, 6, 6));
-        panel.setBorder(new EmptyBorder(10, 0, 10, 6));
-        panel.setBackground(new Color(199, 136, 78));
+        panel.setLayout(new GridLayout(3, 3, 1, 1));
+        panel.setBorder(new EmptyBorder(10, 0, 10, 1));
+        panel.setBackground(Color.decode("#474747"));
 
         panelmdas = new JPanel();
-        panelmdas.setLayout(new GridLayout(4, 1, 6, 6));
-        panelmdas.setBorder(new EmptyBorder(10, 10, 10, 6));
-        panelmdas.setBackground(new Color(199, 136, 78));
+        panelmdas.setLayout(new GridLayout(4, 1));
+        panelmdas.setBorder(new EmptyBorder(10, 10, 10, 1));
+        panelmdas.setBackground(Color.decode("#474747"));
 
         panelextras = new JPanel();
-        panelextras.setLayout(new GridLayout(3, 1, 6, 6));
+        panelextras.setLayout(new GridLayout(3, 1));
         panelextras.setBorder(new EmptyBorder(10, 0, 10, 10));
-        panelextras.setBackground(new Color(199, 136, 78));
+        panelextras.setBackground(Color.decode("#474747"));
 
         //buttons in calculator
         String[] numbers = {"7", "8", "9", "4", "5", "6", "1", "2", "3"};
-        String[] mdas = {"✖", "÷", "-", "+"};
+        String[] mdas = {"✖", "➗", "➖", "➕"};
         String[] extras = {"0", "="};
 
 
@@ -72,30 +81,40 @@ public class Client implements ActionListener, Calculator {
             button.setPreferredSize(new Dimension(50, 50));
             button.setActionCommand(i);
             button.addActionListener(this);
+            button.setForeground(Color.LIGHT_GRAY);
+            button.setBorderPainted(false);
+            button.setBackground(Color.decode("#060606"));
             panel.add(button);
         }
 
         for (String i : mdas) {
             JButton button = new JButton(i);
             button.setPreferredSize(new Dimension(50, 50));
-            button.setPreferredSize(new Dimension(50, 50));
             button.setActionCommand(i);
             button.addActionListener(this);
+            button.setForeground(Color.LIGHT_GRAY);
+            button.setBorderPainted(false);
+            button.setBackground(Color.decode("#060606"));
             panelmdas.add(button);
         }
 
         for (String i : extras) {
             JButton btn = new JButton(i);
             btn.setPreferredSize(new Dimension(50, 50));
-            btn.setPreferredSize(new Dimension(50, 50));
             btn.setActionCommand(i);
             btn.addActionListener(this);
+            btn.setForeground(Color.LIGHT_GRAY);
+            btn.setBorderPainted(false);
+            btn.setBackground(Color.decode("#060606"));
             panelextras.add(btn);
         }
 
 
         //clear input
         JButton clear = new JButton("c");
+        clear.setForeground(Color.LIGHT_GRAY);
+        clear.setBorderPainted(false);
+        clear.setBackground(Color.decode("#060606"));
         clear.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -111,7 +130,7 @@ public class Client implements ActionListener, Calculator {
         calcFrame.add(panel, BorderLayout.CENTER);
         calcFrame.add(panelextras, BorderLayout.EAST);
         calcFrame.add(screen, BorderLayout.PAGE_END);
-        calcFrame.add(resultsScreen, BorderLayout.PAGE_START);
+        calcFrame.add(reusltpanel, BorderLayout.PAGE_START);
         calcFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         calcFrame.setVisible(true);
     }
@@ -160,16 +179,16 @@ public class Client implements ActionListener, Calculator {
                 input += "9";
                 screen.setText(input);
                 break;
-            case "+":
-                input += "+";
+            case "➕":
+                input += "➕";
                 screen.setText(input);
                 break;
-            case "-":
-                input += "-";
+            case "➖":
+                input += "➖";
                 screen.setText(input);
                 break;
-            case "÷":
-                input += "÷";
+            case "➗":
+                input += "➗";
                 screen.setText(input);
                 break;
             case "✖":
@@ -195,13 +214,13 @@ public class Client implements ActionListener, Calculator {
                         double b = calc.operand2(input);
                         char operator = calc.operator(input); //gets the operator of the equation.
                         switch (operator) {
-                            case '+':
+                            case '➕':
                                 resultsScreen.append(date + input + " = " + calc.add(a, b) + "\n");
                                 break;
-                            case '-':
+                            case '➖':
                                 resultsScreen.append(date + input + " = " + calc.subtract(a, b) + "\n");
                                 break;
-                            case '÷':
+                            case '➗':
                                 if (b == 0) {
                                     resultsScreen.append("You shall not pass");
                                     screen.setText("Cannot divide by Zero!");
