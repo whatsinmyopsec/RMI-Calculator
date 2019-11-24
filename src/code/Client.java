@@ -1,13 +1,12 @@
 package code;
 
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.Naming;
-import java.rmi.RemoteException;
 import java.util.Date;
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 
 /**
  * Client class with calculator GUI.
@@ -21,14 +20,13 @@ public class Client implements ActionListener, Calculator {
 
     private JTextField screen;
     private JTextArea resultsScreen;
-    private JPanel panel, panelmdas, panelextras, reusltpanel;
     private String input;
 
     public static void main(String[] args) {
         new Client();
     }
 
-    Client() {
+    private Client() {
         input = "";
 
         JFrame calcFrame = new JFrame();
@@ -36,43 +34,53 @@ public class Client implements ActionListener, Calculator {
         calcFrame.setSize(400, 500);
         calcFrame.setBackground(Color.decode("#3c3c3c"));
 
-        screen = new JTextField(26);
-        screen.setBorder(new EmptyBorder(10, 10, 10, 10));
+        JPanel inputpanel = new JPanel();
+        inputpanel.setBackground(Color.decode("#474747"));
+        inputpanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+        screen = new JTextField();
         screen.setEditable(false);
         screen.setBackground(Color.LIGHT_GRAY);
+        screen.setPreferredSize(new Dimension(360, 30));
+        screen.setBorder(BorderFactory.createLineBorder(Color.black));
         screen.setHorizontalAlignment(JTextField.RIGHT);
+        inputpanel.add(screen);
 
-        reusltpanel = new JPanel();
+        JPanel reusltpanel = new JPanel();
         reusltpanel.setBackground(Color.decode("#474747"));
-        reusltpanel.setBorder(new EmptyBorder(10,10,10,10));
+        reusltpanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         resultsScreen = new JTextArea();
+        resultsScreen.setLineWrap(true);
         resultsScreen.setEditable(false);
         resultsScreen.setBackground(Color.decode("#d4ffa3"));
-        resultsScreen.setBorder(BorderFactory.createLineBorder(Color.black));
-        resultsScreen.setPreferredSize(new Dimension(360,35));
-        reusltpanel.add(resultsScreen);
+
+        JScrollPane scrollPane = new JScrollPane(resultsScreen);
+        scrollPane.setPreferredSize(new Dimension(360, 35));
+        scrollPane.setBorder(BorderFactory.createLineBorder(Color.black));
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        reusltpanel.add(scrollPane);
 
         // loves the panels
-        panel = new JPanel();
-        panel.setLayout(new GridLayout(3, 3, 1, 1));
-        panel.setBorder(new EmptyBorder(10, 0, 10, 1));
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(3, 4, 1, 1));
+        panel.setBorder(new EmptyBorder(0, 0, 0, 10));
         panel.setBackground(Color.decode("#474747"));
 
-        panelmdas = new JPanel();
-        panelmdas.setLayout(new GridLayout(4, 1));
-        panelmdas.setBorder(new EmptyBorder(10, 10, 10, 1));
+        JPanel panelmdas = new JPanel();
+        panelmdas.setLayout(new GridLayout(4, 1, 1, 1));
+        panelmdas.setBorder(new EmptyBorder(0, 10, 0, 1));
         panelmdas.setBackground(Color.decode("#474747"));
 
-        panelextras = new JPanel();
-        panelextras.setLayout(new GridLayout(3, 1));
-        panelextras.setBorder(new EmptyBorder(10, 0, 10, 10));
-        panelextras.setBackground(Color.decode("#474747"));
+      /*  JPanel panelextras = new JPanel();
+        panelextras.setLayout(new GridLayout(3, 1,1,1));
+        panelextras.setBorder(new EmptyBorder(0, 1, 0, 10));
+        panelextras.setBackground(Color.decode("#474747"));*/
 
         //buttons in calculator
-        String[] numbers = {"7", "8", "9", "4", "5", "6", "1", "2", "3"};
+        String[] numbers = {"7", "8", "9", "0", "4", "5", "6", "=", "1", "2", "3"};
         String[] mdas = {"✖", "➗", "➖", "➕"};
-        String[] extras = {"0", "="};
+        //  String[] extras = {"0", "="};
 
 
         //adding buttons for buttons array
@@ -98,7 +106,7 @@ public class Client implements ActionListener, Calculator {
             panelmdas.add(button);
         }
 
-        for (String i : extras) {
+     /*   for (String i : extras) {
             JButton btn = new JButton(i);
             btn.setPreferredSize(new Dimension(50, 50));
             btn.setActionCommand(i);
@@ -107,7 +115,7 @@ public class Client implements ActionListener, Calculator {
             btn.setBorderPainted(false);
             btn.setBackground(Color.decode("#060606"));
             panelextras.add(btn);
-        }
+        }*/
 
 
         //clear input
@@ -115,21 +123,18 @@ public class Client implements ActionListener, Calculator {
         clear.setForeground(Color.LIGHT_GRAY);
         clear.setBorderPainted(false);
         clear.setBackground(Color.decode("#060606"));
-        clear.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String answer = screen.getText();
-                answer = "";
-                screen.setText(answer);
-            }
+        clear.addActionListener(e -> {
+            String answer;
+            answer = "";
+            screen.setText(answer);
         });
-        panelextras.add(clear);
+        panel.add(clear);
 
         //add all to frame
         calcFrame.add(panelmdas, BorderLayout.WEST);
         calcFrame.add(panel, BorderLayout.CENTER);
-        calcFrame.add(panelextras, BorderLayout.EAST);
-        calcFrame.add(screen, BorderLayout.PAGE_END);
+        //  calcFrame.add(panelextras, BorderLayout.EAST);
+        calcFrame.add(inputpanel, BorderLayout.PAGE_END);
         calcFrame.add(reusltpanel, BorderLayout.PAGE_START);
         calcFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         calcFrame.setVisible(true);
@@ -248,42 +253,42 @@ public class Client implements ActionListener, Calculator {
     }
 
     @Override
-    public double add(double a, double b) throws RemoteException {
+    public double add(double a, double b) {
         return 0;
     }
 
     @Override
-    public double subtract(double a, double b) throws RemoteException {
+    public double subtract(double a, double b) {
         return 0;
     }
 
     @Override
-    public double multiply(double a, double b) throws RemoteException {
+    public double multiply(double a, double b) {
         return 0;
     }
 
     @Override
-    public double divide(double a, double b) throws RemoteException {
+    public double divide(double a, double b) {
         return 0;
     }
 
     @Override
-    public boolean valid(String input) throws RemoteException {
+    public boolean valid(String input) {
         return false;
     }
 
     @Override
-    public char operator(String input) throws RemoteException {
+    public char operator(String input) {
         return 0;
     }
 
     @Override
-    public double operand1(String input) throws RemoteException {
+    public double operand1(String input) {
         return 0;
     }
 
     @Override
-    public double operand2(String input) throws RemoteException {
+    public double operand2(String input) {
         return 0;
     }
 }

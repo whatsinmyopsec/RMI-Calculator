@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 
 /**
  * This is the RMI Registry that is used by the client to get results of inputs
+ * Call server here too ╰(*°▽°*)╯
  *
  * @author Kevin Power - 20075681
  */
@@ -26,28 +27,28 @@ public class RMI extends UnicastRemoteObject implements Calculator {
     }
 
     @Override
-    public double add(double a, double b) throws RemoteException {
+    public double add(double a, double b) {
         handleClientConnectionDetails();
         view.handleAction("Add Method Called : " + a + " ➕ " + b + "\nThe answer to this is : " + (a + b));
         return Double.parseDouble(decimal.format(a + b));
     }
 
     @Override
-    public double subtract(double a, double b) throws RemoteException {
+    public double subtract(double a, double b) {
         handleClientConnectionDetails();
         view.handleAction("Subtract Method Called : " + a + " ➖ " + b + "\nThe answer to this is : " + (a - b));
         return Double.parseDouble(decimal.format(a - b));
     }
 
     @Override
-    public double multiply(double a, double b) throws RemoteException {
+    public double multiply(double a, double b) {
         handleClientConnectionDetails();
         view.handleAction("Multiply Method Called : " + a + " ✖ " + b + "\nThe answer to this is : " + (a * b));
         return Double.parseDouble(decimal.format(a * b));
     }
 
     @Override
-    public double divide(double a, double b) throws RemoteException {
+    public double divide(double a, double b) {
         if (b == 0) {
             return 0;
         } else
@@ -61,18 +62,19 @@ public class RMI extends UnicastRemoteObject implements Calculator {
      *
      * @param input Equation
      * @return
-     * @throws RemoteException
+     * matching
      */
     @Override
-    public boolean valid(String input) throws RemoteException {
+    public boolean valid(String input) {
 
         return Pattern.matches("^[\\-+]?\\d{1,}(\\.\\d{1,})?[➖➕✖➗][\\-+]?\\d{1,}(\\.\\d{1,})?$", input);
     }
 
     @Override
-    public char operator(String input) throws RemoteException {
+    public char operator(String input) {
         //this specifies the regular expression to use to find the match
-        Pattern operator = Pattern.compile("(?!^)[➖➕✖➗]"); //regular expression for finding the first operator that is not at the start of the string
+        //regular expression for finding the first operator that is not at the start of the string
+        Pattern operator = Pattern.compile("(?!^)[➖➕✖➗]");
         Matcher match = operator.matcher(input);
         if (match.find()) {
             return match.group(0).charAt(0); //return operator
@@ -82,7 +84,7 @@ public class RMI extends UnicastRemoteObject implements Calculator {
     }
 
     @Override
-    public double operand1(String input) throws RemoteException {
+    public double operand1(String input) {
         String nums = input.replaceFirst("(?!^)[➖➕✖➗]", "÷"); //replaces the operator into "/"
         //gets the first part of the string before the delimiter and converts to double
         return Double.parseDouble(nums.substring(0, nums.indexOf("÷")));
@@ -90,7 +92,7 @@ public class RMI extends UnicastRemoteObject implements Calculator {
     }
 
     @Override
-    public double operand2(String input) throws RemoteException {
+    public double operand2(String input) {
         String nums = input.replaceFirst("(?!^)[➖➕✖➗]", "➗"); //replaces the operator into "/"
         //gets the first part of the string after the delimiter and converts to double
         return Double.parseDouble(nums.substring(nums.indexOf("➗") + 1));
@@ -108,6 +110,7 @@ public class RMI extends UnicastRemoteObject implements Calculator {
      * hack to get this thing to work
      *
      * @param args
+     * args...
      */
 
     public static void main(String... args) {
