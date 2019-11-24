@@ -4,7 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-class Server {
+class Server extends JPanel {
     private JTextArea screen;
 
     Server() {
