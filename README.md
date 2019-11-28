@@ -8,4 +8,9 @@ I see you cloning...
 (╯°□°）╯︵ ┻━┻)
 
 ## Final post
+
+* Client.java will run the client
+* RMI.java will run the server
+
+
 (☞ﾟヮﾟ)☞
