@@ -11,6 +11,5 @@ I see you cloning...
 
 * Client.java will run the client
 * RMI.java will run the server
-
-
+* Good old eclipse might make code unreadable but that doesn't matter because it works 
 (☞ﾟヮﾟ)☞
