@@ -1,5 +1,5 @@
 # RMI-Calculator
-
+<img src="https://badges.pufler.dev/visits/whatsinmyopsec/RMI-Calculator">
 Please leave a star if you pull my distasteful code (❁´◡`❁)
 
 I see you cloning...
@@ -13,5 +13,3 @@ I see you cloning...
 * RMI.java will run the server
 * Good old eclipse might make code unreadable but that doesn't matter because it works 
 (☞ﾟヮﾟ)☞
-
-https://github.com/Whats-In-My-Vape/RMI-Calculator
